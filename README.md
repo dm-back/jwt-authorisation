@@ -1,1 +1,1 @@
-# jwt-authorisation
+# jwt-authorization
