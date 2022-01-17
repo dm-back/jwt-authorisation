@@ -21,6 +21,6 @@ router.post(
   api.registration
 );
 router.post("/login", api.login);
-router.get("/users", roleMiddleware(["USER", "ADMIN"]), api.getUsers);
+router.get("/users",  api.getUsers);
 
 module.exports = router;

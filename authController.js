@@ -17,12 +17,13 @@ class Api {
   async registration(req, res) {
     try {
       const errors = validationResult(req);
+      console.log('req.body', req.body)
       if (!errors.isEmpty()) {
         return res
           .status(400)
           .json({ message: "Ошибка при регистрации", errors });
       }
-      const { username, password } = req.body;
+      const { firstname, lastname, email, username, password } = req.body;
       const candidate = await User.findOne({ username });
       if (candidate) {
         return res
@@ -32,14 +33,18 @@ class Api {
       const hashedPass = bcript.hashSync(password, 7);
       const userRole = await Role.findOne({ value: "USER" });
       const newUser = new User({
+        firstname,
+        lastname,
+        email,
         username: username,
         password: hashedPass,
         roles: [userRole.value],
       });
       await newUser.save();
+      console.log(`Пользователь с  данными ${newUser} `)
       return res
         .status(201)
-        .json({ message: "Новый пользователь успешно создан" });
+        .json({ message: "Регистрация пройдена успешно" });
     } catch (error) {
       console.log(error);
       res.status(400).json({ message: "registration error" });
@@ -48,6 +53,7 @@ class Api {
 
   async login(req, res) {
     try {
+      console.log(req.body);
       const { username, password } = req.body;
       const loggedUser = await User.findOne({ username });
       if (!loggedUser) {
@@ -59,8 +65,9 @@ class Api {
       if (!validPass) {
         return res.status(400).json({ message: `Указан неверный пароль` });
       }
+      const loginUserId = loggedUser._id
       const token = generateAccessToken(loggedUser._id, loggedUser.roles);
-      return res.json({ token });
+      return res.json( { loginUserId, token }), console.log(`Пользователь  ${loggedUser.username} вошел в систему`);
     } catch (error) {
       console.log(error);
       res.status(400).json({ message: "login error" });
