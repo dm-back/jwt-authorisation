@@ -67,7 +67,8 @@ class Api {
       }
       const loginUserId = loggedUser._id
       const token = generateAccessToken(loggedUser._id, loggedUser.roles);
-      return res.json( { loginUserId, token }), console.log(`Пользователь  ${loggedUser.username} вошел в систему`);
+      const userRole = loggedUser.roles
+      return res.json( { loginUserId, token, userRole }), console.log(`Пользователь  ${loggedUser.username} вошел в систему`), console.log(loggedUser.username, userRole);
     } catch (error) {
       console.log(error);
       res.status(400).json({ message: "login error" });
