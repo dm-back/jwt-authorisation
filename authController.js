@@ -59,16 +59,16 @@ class Api {
       if (!loggedUser) {
         return res
           .status(400)
-          .json({ message: `Пользователь с  именем ${loggedUser} не найден` });
+          .json({ message:`Пользователь с таким  именем  не найден` });
       }
       const validPass = bcript.compareSync(password, loggedUser.password);
       if (!validPass) {
         return res.status(400).json({ message: `Указан неверный пароль` });
       }
-      const loginUserId = loggedUser._id
+      const {firstname, lastname, email, username:userName, roles:userRole, _id:loginUserId} = loggedUser
       const token = generateAccessToken(loggedUser._id, loggedUser.roles);
-      const userRole = loggedUser.roles
-      return res.json( { loginUserId, token, userRole }), console.log(`Пользователь  ${loggedUser.username} вошел в систему`), console.log(loggedUser.username, userRole);
+      //const userRole = loggedUser.roles
+      return res.json( { firstname, lastname, email, userName, loginUserId, token, userRole }), console.log(`Пользователь  ${userName} вошел в систему`), console.log(userName, userRole);
     } catch (error) {
       console.log(error);
       res.status(400).json({ message: "login error" });
